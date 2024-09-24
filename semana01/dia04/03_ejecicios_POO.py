@@ -10,7 +10,7 @@ class Cajero:
         self.saldo = saldo
 
     def consultarSaldo(self):
-        print(f"Saldo disponible: ${self.saldo}")
+        print(f"Saldo disponible: ${self.saldo}\n")
 
     def ingresarDinero(self, monto):
         if monto <= 0:
@@ -39,6 +39,7 @@ def main():
         print("1. Consultar Saldo")
         print("2. Depositar dinero")
         print("3. Retirar dinero")
+        print("4. Salir")
 
         opcion = int(input("\nIngresa la opción: "))
 
@@ -48,12 +49,18 @@ def main():
             continue
 
         if opcion == 1:
-            pass
+            cajero.consultarSaldo()
 
         elif opcion == 2:
-            pass
+            monto = float(input("\nCuánto desea depositar: "))
+            cajero.ingresarDinero(monto)
 
         elif opcion == 3:
-            pass
+            monto = float(input("\nCuánto desea retirar: "))
+            cajero.retirarDinero(monto)
+
+        elif opcion == 4:
+            print("Gracias por usar el cajero automático")
+            break
 
 main()
