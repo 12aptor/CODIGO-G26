@@ -55,6 +55,10 @@ def rutaProtegida():
         'precio': json['precio']
     }, 200
 
+@app.errorhandler(404)
+def pageNotFound(error):
+    return 'Página no encontrada', 404
+
 # Correr el servidor
 if __name__ == '__main__':
     app.run(debug=True)
