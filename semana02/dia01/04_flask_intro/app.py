@@ -34,6 +34,27 @@ def obtenerUsuario(nombre):
     print(type(nombre))
     return f'Hola {nombre}', 200
 
+@app.get('/html')
+def renderHtml():
+    return '<button>Dame click!</button>'
+
+@app.post('/ruta-protegida')
+def rutaProtegida():
+    # Extraer información de los headers
+    headers = request.headers
+    jwt = headers['Authorization']
+    # print(jwt)
+
+    # Recuperar el body
+    json = request.json
+    print(json)
+
+    return {
+        'id': 1,
+        'nombre': json['nombre'],
+        'precio': json['precio']
+    }, 200
+
 # Correr el servidor
 if __name__ == '__main__':
     app.run(debug=True)
