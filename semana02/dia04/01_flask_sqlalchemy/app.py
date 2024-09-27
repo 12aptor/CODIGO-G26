@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, request
 from db import db
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String
@@ -26,10 +26,7 @@ def index():
 @app.post("/user/create")
 def createUser():
     try:
-        json = {
-            'name': 'Pepito',
-            'email': 'pepito@gmail.com'
-        }
+        json = request.get_json()
         user = UserModel(
             name=json['name'],
             email=json['email']
@@ -49,9 +46,32 @@ def createUser():
     except Exception as e:
         db.session.rollback()
         return {
-            'message': 'Error to create user',
+            'message': 'An error ocurred creating user',
             'error': str(e)
-        }
+        }, 500
+    
+@app.get('/user/list')
+def listUsers():
+    try:
+        users = UserModel.query.all()
+        
+        response = []
+        for user in users:
+            response.append({
+                'id': user.id,
+                'name': user.name,
+                'email': user.email
+            })
+
+        return {
+            'message': 'Users fetched successfully',
+            'data': response
+        }, 200
+    except Exception as e:
+        return {
+            'message': 'An error ocurred',
+            'error': str(e)
+        }, 500
 
 if __name__ == '__main__':
     app.run(debug=True)
