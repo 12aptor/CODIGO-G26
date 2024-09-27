@@ -56,7 +56,7 @@ SELECT id, title, director FROM movies WHERE id = 1;
     SELECT * FROM movies WHERE year BETWEEN 2000 AND 2010;
     ```
 
-- **NOT BETWEEN: Filstrar por rango de valores excluyendo los valores del rango.
+- **NOT BETWEEN**: Filstrar por rango de valores excluyendo los valores del rango.
 
     ```sql
     SELECT * FROM movies WHERE year NOT BETWEEN 2000 AND 2010;
