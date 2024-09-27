@@ -115,3 +115,48 @@ SELECT id, title, director FROM movies WHERE id = 1;
     SELECT * FROM movies LIMIT 5 OFFSET 5;
     ```
 
+## Operadores AND, OR y NOT
+
+- **AND**: Operador lógico Y
+
+    ```sql
+    SELECT * FROM movies WHERE year >= 2000 AND year <= 2010;
+    ```
+
+- **OR**: Operador lógico O
+
+    ```sql
+    SELECT * FROM movies WHERE year = 2000 OR year = 2010;
+    ```
+
+- **NOT**: Operador lógico NO
+
+    ```sql
+    SELECT * FROM movies WHERE NOT year = 2000;
+    ```
+
+## Operador UPDATE
+
+- **UPDATE**: Actualizar registros
+
+    ```sql
+    UPDATE movies SET year = 2000 WHERE id = 1;
+    ```
+
+## Operador DELETE
+
+- **DELETE**: Eliminar registros
+
+    ```sql
+    DELETE FROM movies WHERE id = 1;
+    ```
+
+## Operador JOIN
+
+- **JOIN**: Unir tablas
+
+    ```sql
+    SELECT title, domestic_sales
+    FROM movies
+    JOIN boxoffice ON movies.id = boxoffice.movie_id;
+    ```
