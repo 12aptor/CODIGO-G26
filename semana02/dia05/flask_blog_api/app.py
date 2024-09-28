@@ -5,9 +5,7 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from config import Config
 
-from models.user_model import UserModel
-from models.post_model import PostModel
-from models.comment_model import CommentModel
+from routes.user_router import user_router
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -18,9 +16,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
 
-@app.get('/')
-def index():
-    return 'Hola Flask 😀'
+app.register_blueprint(user_router, url_prefix='/api/user')
 
 if __name__ == '__main__':
     app.run(debug=True)
