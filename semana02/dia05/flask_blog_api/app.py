@@ -5,6 +5,10 @@ from flask_migrate import Migrate
 from flask_jwt_extended import JWTManager
 from config import Config
 
+from models.user_model import UserModel
+from models.post_model import PostModel
+from models.comment_model import CommentModel
+
 app = Flask(__name__)
 cors = CORS(app)
 

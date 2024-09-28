@@ -3,6 +3,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import String, Text, Boolean, DateTime
 from datetime import datetime
 
+
 class UserModel(db.Model):
     __tablename__ = 'users'
 
