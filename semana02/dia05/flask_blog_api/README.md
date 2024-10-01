@@ -26,3 +26,10 @@ flask db migrate -m "Descripcion de la migracion"
 # Aplicar la migracion
 flask db upgrade
 ```
+
+## Variables de entorno
+
+```bash
+DATABASE_URI=''
+SECRET_KEY=''
+```

@@ -1,7 +1,12 @@
 from models.user_model import UserModel
 from pydantic import ValidationError
-from schemas.user_schema import LoginSchema
+from schemas.user_schema import LoginSchema, RefreshSchema
 import bcrypt
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    decode_token
+)
 
 
 class AuthController:
@@ -32,8 +37,8 @@ class AuthController:
             return {
                 'message': 'Usuario autenticado correctamente',
                 'data': {
-                    'access_token': '',
-                    'refresh_token': ''
+                    'access_token': create_access_token(identity=user.id),
+                    'refresh_token': create_refresh_token(identity=user.id)
                 }
             }, 200
         except ValidationError as e:
@@ -44,5 +49,33 @@ class AuthController:
         except Exception as e:
             return {
                 'message': 'Error al iniciar sesión',
+                'error': str(e)
+            }, 500
+        
+    def refresh(self, json):
+        try:
+            validated_token = RefreshSchema.model_validate(json, strict=True)
+
+            dict_token = decode_token(validated_token.refresh_token)
+
+            if dict_token['type'] != 'refresh':
+                return {
+                    'message': 'Error al actualizar las credenciales'
+                }, 401
+
+            return {
+                'message': 'Token actualizado correctamente',
+                'data': {
+                    'access_token': create_access_token(identity=dict_token['sub'])
+                }
+            }, 200
+        except ValidationError as e:
+            return {
+                'message': 'Error al validar las credenciales',
+                'error': e.errors()
+            }, 400
+        except Exception as e:
+            return {
+                'message': 'Error al actualizar las credenciales',
                 'error': str(e)
             }, 500

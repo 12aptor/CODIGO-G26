@@ -15,3 +15,6 @@ class UpdateUserSchema(UserSchema):
 class LoginSchema(BaseModel):
     email: str
     password: str
+
+class RefreshSchema(BaseModel):
+    refresh_token: str
