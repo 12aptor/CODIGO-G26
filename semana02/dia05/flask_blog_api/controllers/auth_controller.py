@@ -14,13 +14,28 @@ class AuthController:
 
             user = self.model.query.filter_by(email=validated_user.email).first()
 
-            if not user:
+            if not user or user.status == False:
                 return {
-                    'message': 'El usuario no existe'
-                }, 404
+                    'message': 'Credenciales incorrectas'
+                }, 401
             
+            is_pwd_valid = bcrypt.checkpw(
+                validated_user.password.encode('utf-8'),
+                user.password.encode('utf-8')
+            )
             
-
+            if not is_pwd_valid:
+                return {
+                    'message': 'Credenciales incorrectas'
+                }, 401
+            
+            return {
+                'message': 'Usuario autenticado correctamente',
+                'data': {
+                    'access_token': '',
+                    'refresh_token': ''
+                }
+            }, 200
         except ValidationError as e:
             return {
                 'message': 'Error al validar las credenciales',
