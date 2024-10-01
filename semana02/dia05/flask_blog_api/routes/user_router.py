@@ -18,3 +18,11 @@ def list_users():
 def update_user(id):
     json = request.get_json()
     return controller.update(id, json)
+
+@user_router.get('/get/<int:id>')
+def get_user(id):
+    return controller.get_by_id(id)
+
+@user_router.delete('/delete/<int:id>')
+def delete_user(id):
+    return controller.delete(id)

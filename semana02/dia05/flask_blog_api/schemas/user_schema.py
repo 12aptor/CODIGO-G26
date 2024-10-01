@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from typing import Optional
 
 
 class UserSchema(BaseModel):
@@ -6,3 +7,11 @@ class UserSchema(BaseModel):
     email: str
     password: str
     status: bool
+
+class UpdateUserSchema(UserSchema):
+    password: Optional[str] = None
+    password_confirm: Optional[str] = None
+
+class LoginSchema(BaseModel):
+    email: str
+    password: str
