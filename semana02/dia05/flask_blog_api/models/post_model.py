@@ -3,6 +3,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Text, DateTime, ForeignKey
 from datetime import datetime
 from models.user_model import UserModel
+import cloudinary_config
+import cloudinary.utils
 
 
 class PostModel(db.Model):
@@ -16,4 +18,20 @@ class PostModel(db.Model):
     updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.now, onupdate=datetime.now)
     author_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 
-    author: Mapped[UserModel] = relationship(back_populates='posts')
+    author: Mapped[UserModel] = relationship()
+
+
+    def to_dict(self, image_url=None):
+        if image_url is None:
+            image_url = cloudinary.utils.cloudinary_url(self.image)[0]
+
+        return {
+            'id': self.id,
+            'title': self.title,
+            'content': self.content,
+            'image': image_url,
+            'created_at': str(self.created_at),
+            'updated_at': str(self.updated_at),
+            'author_id': self.author_id,
+            'author': self.author.to_dict()
+        }

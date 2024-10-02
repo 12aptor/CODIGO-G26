@@ -7,6 +7,7 @@ from config import Config
 
 from routes.auth_router import auth_router
 from routes.user_router import user_router
+from routes.post_router import post_router
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -17,8 +18,15 @@ db.init_app(app)
 migrate = Migrate(app, db)
 jwt = JWTManager(app)
 
+@jwt.unauthorized_loader
+def custom_unauthorized_response(callback):
+    return {
+        'message': 'Credenciales incorrectas',
+    }, 401
+
 app.register_blueprint(user_router, url_prefix='/api/user')
 app.register_blueprint(auth_router, url_prefix='/api/auth')
+app.register_blueprint(post_router, url_prefix='/api/post')
 
 
 if __name__ == '__main__':
