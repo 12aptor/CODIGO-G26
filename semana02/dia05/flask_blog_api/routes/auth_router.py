@@ -11,6 +11,11 @@ def login():
     json = request.get_json()
     return controller.login(json)
 
+@auth_router.post('/register')
+def register():
+    json = request.get_json()
+    return controller.register(json)
+
 @auth_router.post('/refresh')
 def refresh():
     json = request.get_json()

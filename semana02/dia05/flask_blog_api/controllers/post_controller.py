@@ -28,7 +28,10 @@ class PostController:
 
             json['image'] = public_id
 
-            json['author_id'] = int(json.get('author_id'))
+            try:
+                json['author_id'] = int(json.get('author_id'))
+            except:
+                json['author_id'] = json.get('author_id')
             
             validated_post = PostSchema.model_validate(json, strict=True)
 
@@ -50,5 +53,38 @@ class PostController:
             db.session.rollback()
             return {
                 'message': 'Error al crear el post',
+                'error': str(e)
+            }, 500
+        
+    def list(self):
+        try:
+            post = self.model.query.all()
+
+            return {
+                'message': 'Listado de posts',
+                'data': [post.to_dict() for post in post]
+            }
+        except Exception as e:
+            return {
+                'message': ' Error al obtener los posts',
+                'error': str(e)
+            }, 500
+        
+    def get_by_id(self, id):
+        try:
+            post = self.model.query.get(id)
+
+            if not post:
+                return {
+                    'message': 'El post no existe'
+                }, 404
+            
+            return {
+                'message': 'Post obtenido correctamente',
+                'data': post.to_dict()
+            }, 200
+        except Exception as e:
+            return {
+                'message': 'Error al obtener el post',
                 'error': str(e)
             }, 500

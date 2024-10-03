@@ -14,4 +14,15 @@ class CommentModel(db.Model):
     post_id: Mapped[int] = mapped_column(ForeignKey('posts.id'))
     author_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 
-    author: Mapped[UserModel] = relationship(back_populates='comments')
+    author: Mapped[UserModel] = relationship()
+
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'content': self.content,
+            'created_at': str(self.created_at),
+            'post_id': self.post_id,
+            'author_id': self.author_id,
+            'author': self.author.to_dict()
+        }

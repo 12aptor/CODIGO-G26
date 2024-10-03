@@ -14,7 +14,7 @@ class UserModel(db.Model):
     status: Mapped[bool] = mapped_column(Boolean)
     created_at: Mapped[str] = mapped_column(DateTime, default=datetime.now)
     updated_at: Mapped[str] = mapped_column(DateTime, default=datetime.now, onupdate=datetime.now)
-
+    
 
     def to_dict(self):
         return {

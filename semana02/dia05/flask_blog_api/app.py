@@ -8,6 +8,7 @@ from config import Config
 from routes.auth_router import auth_router
 from routes.user_router import user_router
 from routes.post_router import post_router
+from routes.comment_router import comment_router
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -27,6 +28,7 @@ def custom_unauthorized_response(callback):
 app.register_blueprint(user_router, url_prefix='/api/user')
 app.register_blueprint(auth_router, url_prefix='/api/auth')
 app.register_blueprint(post_router, url_prefix='/api/post')
+app.register_blueprint(comment_router, url_prefix='/api/comment')
 
 
 if __name__ == '__main__':

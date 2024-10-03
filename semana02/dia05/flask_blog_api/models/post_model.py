@@ -3,8 +3,10 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import Text, DateTime, ForeignKey
 from datetime import datetime
 from models.user_model import UserModel
+from models.comment_model import CommentModel
 import cloudinary_config
 import cloudinary.utils
+from typing import List
 
 
 class PostModel(db.Model):
@@ -19,6 +21,7 @@ class PostModel(db.Model):
     author_id: Mapped[int] = mapped_column(ForeignKey('users.id'))
 
     author: Mapped[UserModel] = relationship()
+    comments: Mapped[List[CommentModel]] = relationship()
 
 
     def to_dict(self, image_url=None):
@@ -33,5 +36,6 @@ class PostModel(db.Model):
             'created_at': str(self.created_at),
             'updated_at': str(self.updated_at),
             'author_id': self.author_id,
-            'author': self.author.to_dict()
+            'author': self.author.to_dict(),
+            'comments': [comment.to_dict() for comment in self.comments]
         }
