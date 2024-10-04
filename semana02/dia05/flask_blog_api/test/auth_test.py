@@ -37,18 +37,11 @@ def client():
         db.drop_all()
 
 
-# def test_register(client: Flask):
-#     json = {
-#         "name": "Ana",
-#         "email": "ana@gmail.com",
-#         "password": "123456",
-#         "status": True
-#     }
-#     response = client.post('/api/auth/register', json=json)
-#     assert response.status_code == 201
-#     assert response.json['message'] == 'Usuario creado correctamente'
-
-
+@pytest.mark.usefixtures('client')
 def test_user_list(client: Flask):
     response = client.get('/api/user/list')
     assert response.status_code == 200
+    assert response.json['message'] == 'Listado de usuarios'
+    assert isinstance(response.json['data'], list)
+    assert response.json['data'][0]['name'] == 'Ana'
+    assert response.json['data'][0]['email'] == 'ana@gmail.com'
