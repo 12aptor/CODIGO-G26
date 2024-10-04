@@ -13,6 +13,7 @@ pip install bcrypt # Hashing
 pip install python-dotenv # Variable de entorno
 pip install flask-jwt-extended # Autenticacion
 pip install cloudinary # Almacenamiento de imágenes
+pip install pytest # Tests
 ```
 
 ## Migraciones

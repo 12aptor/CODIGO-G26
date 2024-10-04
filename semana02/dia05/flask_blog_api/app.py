@@ -10,6 +10,7 @@ from routes.user_router import user_router
 from routes.post_router import post_router
 from routes.comment_router import comment_router
 
+
 app = Flask(__name__)
 cors = CORS(app)
 
