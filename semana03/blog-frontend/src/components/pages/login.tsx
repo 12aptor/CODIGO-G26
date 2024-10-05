@@ -4,6 +4,7 @@ import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { LockIcon, MailIcon } from "lucide-react";
 import { Button } from "../ui/button";
+import { loginService } from "../../services/auth_services";
 
 export const Login = () => {
   const [credentials, setCredentials] = useState({
@@ -20,10 +21,16 @@ export const Login = () => {
     });
   };
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      console.log(credentials);
+      const { status, json } = await loginService(credentials);
+
+      if (status === 200) {
+        console.log(json);
+      }
+
+      throw new Error(json.message);
     } catch (error) {
       if (error instanceof Error) {
         console.log(error.message);
@@ -71,6 +78,12 @@ export const Login = () => {
                   required
                 />
               </div>
+            </div>
+            <div className="flex items-center space-x-2">
+              <input type="checkbox" id="remember" />
+              <Label htmlFor="remember" className="text-sm font-normal">
+                Recordarme
+              </Label>
             </div>
             <Button className="w-full" type="submit">
               Login
