@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { getPostsService } from "../../services/post_service";
 import { IPost } from "../../types";
+import { useNavigate } from "react-router-dom";
 
 export const Posts = () => {
   const [posts, setPosts] = useState<IPost[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     getPostsService().then((response) => {
@@ -20,17 +22,18 @@ export const Posts = () => {
         {posts.map((post) => (
           <div
             key={post.id}
-            className="w-[calc(100%/3)] p-4 border border-gray-300 rounded-lg"
+            className="w-[calc(100%/3)] p-4 border border-gray-300 rounded-lg cursor-pointer"
+            onClick={() => navigate(`/post/${post.id}`)}
           >
             <picture className="rounded-md overflow-hidden">
               <img src={post.image} alt="Imagen de la novedad" />
             </picture>
             <h2 className="text-xl font-bold">{post.title}</h2>
-            <div className="flex justify-between gap-5">
+            <div className="flex justify-between gap-5 overflow-hidden">
               <span className="text-ellipsis text-xs whitespace-nowrap">
                 {post.author.name}
               </span>
-              <span className="text-xs whitespace-nowrap">
+              <span className="text-ellipsis text-xs whitespace-nowrap">
                 {post.created_at}
               </span>
             </div>

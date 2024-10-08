@@ -32,6 +32,7 @@ export const Login = () => {
 
       if (status === 200) {
         toast.success(json.message);
+        localStorage.setItem("token", json.data.access_token);
         navigate("/backoffice");
         return;
       }

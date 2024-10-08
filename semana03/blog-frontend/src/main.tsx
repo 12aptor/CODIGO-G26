@@ -5,7 +5,9 @@ import { Login } from "./components/pages/login";
 import { Toaster } from "react-hot-toast";
 import { Register } from "./components/pages/register";
 import { Posts } from "./components/pages/posts";
+import { Post } from "./components/pages/post";
 import "./index.css";
+import { Backoffice } from "./components/pages/backoffice";
 
 const router = createBrowserRouter([
   {
@@ -14,8 +16,8 @@ const router = createBrowserRouter([
     errorElement: <div>Error</div>,
   },
   {
-    path: "/post/:id",
-    element: <div>Post</div>,
+    path: "/post/:postId",
+    element: <Post />,
   },
   {
     path: "/registro",
@@ -24,6 +26,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <Login />,
+  },
+  {
+    path: "/backoffice",
+    element: <Backoffice />,
   },
 ]);
 

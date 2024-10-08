@@ -1,1 +1,1 @@
-export const API_URL = "https://flask-blog-api-ar2r.onrender.com/api";
+export const API_URL = import.meta.env.VITE_API_URL;
