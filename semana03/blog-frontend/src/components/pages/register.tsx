@@ -1,26 +1,28 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { LockIcon, MailIcon, UserIcon } from "lucide-react";
 import { Card } from "../ui/card";
-import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { LockIcon, MailIcon } from "lucide-react";
+import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { loginService } from "../../services/auth_services";
-import { ICredentials } from "../../types";
+import { ChangeEvent, FormEvent, useState } from "react";
+import { IRegisterUser } from "../../types";
 import toast from "react-hot-toast";
+import { registerService } from "../../services/auth_services";
 import { useNavigate } from "react-router-dom";
 
-export const Login = () => {
-  const [credentials, setCredentials] = useState<ICredentials>({
+export const Register = () => {
+  const [userData, setUserData] = useState<IRegisterUser>({
+    name: "",
     email: "",
     password: "",
+    status: true,
   });
   const navigate = useNavigate();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
 
-    setCredentials({
-      ...credentials,
+    setUserData({
+      ...userData,
       [name]: value,
     });
   };
@@ -28,11 +30,11 @@ export const Login = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const { status, json } = await loginService(credentials);
+      const { status, json } = await registerService(userData);
 
-      if (status === 200) {
+      if (status === 201) {
         toast.success(json.message);
-        navigate("/backoffice");
+        navigate("/login");
         return;
       }
 
@@ -56,6 +58,21 @@ export const Login = () => {
         </div>
         <div className="p-6 pt-0">
           <form onSubmit={handleSubmit} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name">Nombre</Label>
+              <div className="relative">
+                <UserIcon className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                <Input
+                  id="name"
+                  type="text"
+                  name="name"
+                  placeholder="John Doe"
+                  className="pl-10"
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="email">Correo</Label>
               <div className="relative">
