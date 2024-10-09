@@ -15,6 +15,7 @@ export const Login = () => {
     password: "",
   });
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -27,7 +28,12 @@ export const Login = () => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (loading) return;
+
     try {
+      setLoading(true);
+
       const { status, json } = await loginService(credentials);
 
       if (status === 200) {
@@ -43,6 +49,8 @@ export const Login = () => {
         toast.error(error.message);
         return;
       }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -93,7 +101,7 @@ export const Login = () => {
                 Recordarme
               </Label>
             </div>
-            <Button className="w-full" type="submit">
+            <Button className="w-full" type="submit" disabled={loading}>
               Login
             </Button>
           </form>
