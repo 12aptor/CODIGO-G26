@@ -32,3 +32,9 @@ python manage.py showmigrations # Muestra las migraciones
 ```bash
 python manage.py createsuperuser
 ```
+
+## Crear una aplicación
+
+```bash
+python manage.py startapp almacen
+```
