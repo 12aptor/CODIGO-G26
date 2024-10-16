@@ -11,7 +11,7 @@ class RoleModel(models.Model):
         ('SELLER', 'Vendedor'),
     )
 
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=10, choices=ROLE_CHOICES, unique=True)
     status = models.BooleanField(default=True)
 
     class Meta:
