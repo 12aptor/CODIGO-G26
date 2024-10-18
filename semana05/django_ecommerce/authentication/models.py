@@ -28,7 +28,7 @@ class UserModel(AbstractBaseUser):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_superuser = models.BooleanField(default=False)
-    rol = models.ForeignKey(
+    role = models.ForeignKey(
         RoleModel,
         on_delete=models.CASCADE,
         related_name='users',

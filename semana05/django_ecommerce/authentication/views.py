@@ -7,7 +7,12 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
 )
 from rest_framework.serializers import ValidationError
-from rest_framework.permissions import IsAuthenticated
+from .permissions import (
+    IsAuthenticated,
+    IsAdmin,
+    IsSeller,
+    IsSellerOrAdmin,
+)
 
 
 class CreateRoleView(generics.CreateAPIView):
@@ -78,7 +83,7 @@ class UpdateUserView(generics.UpdateAPIView):
 class ListUserView(generics.ListAPIView):
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated, IsAdmin]
 
     @swagger_auto_schema(tags=['Usuarios'])
     def get(self, request, *args, **kwargs):
