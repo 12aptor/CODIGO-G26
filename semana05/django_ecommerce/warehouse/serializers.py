@@ -14,3 +14,8 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = ProductModel
         fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['image'] = instance.image.url
+        return representation

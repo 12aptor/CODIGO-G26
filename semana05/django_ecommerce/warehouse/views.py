@@ -1,5 +1,10 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
+from rest_framework.parsers import (
+    MultiPartParser,
+    FormParser,
+)
+from utils.pagination import Pagination
 from django.http import Http404
 from .models import (
     CategoryModel,
@@ -100,34 +105,122 @@ class DeleteCategoryView(generics.DestroyAPIView):
             return Response({
                 'message': 'Categoria no encontrada',
             }, status=status.HTTP_404_NOT_FOUND)
-        
 
 class ListProductView(generics.ListAPIView):
-    queryset = ProductModel.objects.all()
     serializer_class = ProductSerializer
-
-    page_param = openapi.Parameter(
-        'page',
-        openapi.IN_QUERY,
-        type=openapi.TYPE_INTEGER,
-        description='Número de página',
-    )
-    per_page_param = openapi.Parameter(
-        'per_page',
-        openapi.IN_QUERY,
-        type=openapi.TYPE_INTEGER,
-        description='Número de productos por página',
-    )
+    pagination_class = Pagination
 
     def get_queryset(self):
-        return super().get_queryset()
+        queryset = ProductModel.objects.filter(status='ACTIVE')
+        return queryset
 
-    @swagger_auto_schema(tags=[PRODUCT_TAG], manual_parameters=[page_param, per_page_param])
+    @swagger_auto_schema(tags=[PRODUCT_TAG])
     def get(self, request, *args, **kwargs):
         """ Listar productos (método GET) """
         response = super().get(request, *args, **kwargs)
 
         return Response({
             'message': 'Productos listados exitosamente',
-            'data': response.data
+            'data': response.data['results'],
+            'count': response.data['count'],
+            'next': response.data['next'],
+            'previous': response.data['previous'],
         }, status=status.HTTP_200_OK)
+
+class CreateProductView(generics.CreateAPIView):
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated, IsAdmin]
+    parser_classes = (MultiPartParser, FormParser)
+
+    image_param = openapi.Parameter(
+        'image',
+        openapi.IN_FORM,
+        description='Imagen del producto',
+        type=openapi.TYPE_FILE,
+        required=True,
+    )
+
+    @swagger_auto_schema(
+        tags=[PRODUCT_TAG],
+        manual_parameters=[image_param],
+        consumes=['multipart/form-data']
+    )
+    def post(self, request, *args, **kwargs):
+        """ Crear un producto (método POSt) """
+        response = super().post(request, *args, **kwargs)
+
+        return Response({
+            'message': 'Producto creado exitosamente',
+            'data': response.data
+        }, status=status.HTTP_201_CREATED)
+    
+class UpdateProductView(generics.UpdateAPIView):
+    queryset = ProductModel.objects.all()
+    serializer_class = ProductSerializer
+    permission_classes = [IsAuthenticated, IsAdmin]
+    parser_classes = (MultiPartParser, FormParser)
+
+    image_param = openapi.Parameter(
+        'image',
+        openapi.IN_FORM,
+        description='Imagen del producto',
+        type=openapi.TYPE_FILE,
+        required=False,
+    )
+
+    @swagger_auto_schema(
+        tags=[PRODUCT_TAG],
+        manual_parameters=[image_param],
+        consumes=['multipart/form-data']
+    )
+    def put(self, request, *args, **kwargs):
+        """ Actualiza un producto (método PUT) """
+        try:
+            response = super().put(request, *args, **kwargs)
+
+            return Response({
+                'message': 'Producto actualizado exitosamente',
+                'data': response.data
+            }, status=status.HTTP_200_OK)
+        except Http404:
+            return Response({
+                'message': 'Producto no encontrado',
+            }, status=status.HTTP_404_NOT_FOUND)
+        
+    @swagger_auto_schema(
+        tags=[PRODUCT_TAG],
+        manual_parameters=[image_param],
+        consumes=['multipart/form-data']
+    )
+    def patch(self, request, *args, **kwargs):
+        """ Actualiza parcialmente un producto (método PATCH) """
+        try:
+            response = super().partial_update(request, *args, **kwargs)
+
+            return Response({
+                'message': 'Producto actualizado exitosamente',
+                'data': response.data
+            }, status=status.HTTP_200_OK)
+        except Http404:
+            return Response({
+                'message': 'Producto no encontrado',
+            }, status=status.HTTP_404_NOT_FOUND)
+
+class DeleteProductView(generics.DestroyAPIView):
+    queryset = ProductModel.objects.all()
+    permission_classes = (IsAuthenticated, IsAdmin)
+
+    @swagger_auto_schema(tags=[PRODUCT_TAG])
+    def delete(self, request, *args, **kwargs):
+        try:
+            product = self.get_object()
+            product.status = 'DELETED'
+            product.save()
+
+            return Response({
+                'message': 'Producto eliminado exitosamente',
+            }, status=status.HTTP_200_OK)
+        except Http404:
+            return Response({
+                'message': 'Producto no encontrado',
+            }, status=status.HTTP_404_NOT_FOUND)
