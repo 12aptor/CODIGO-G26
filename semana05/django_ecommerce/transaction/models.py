@@ -47,7 +47,7 @@ class SaleDetailModel(models.Model):
         SaleModel,
         on_delete=models.CASCADE,
         related_name='details',
-        db_column='sale_id'
+        db_column='sale_id',
     )
     product = models.ForeignKey(
         ProductModel,

@@ -111,12 +111,33 @@ class ListProductView(generics.ListAPIView):
     pagination_class = Pagination
 
     def get_queryset(self):
-        queryset = ProductModel.objects.filter(status='ACTIVE')
+        queryset = ProductModel.objects.filter(name='ACTIVE').order_by('-id')
         return queryset
 
     @swagger_auto_schema(tags=[PRODUCT_TAG])
     def get(self, request, *args, **kwargs):
         """ Listar productos (método GET) """
+        response = super().get(request, *args, **kwargs)
+
+        return Response({
+            'message': 'Productos listados exitosamente',
+            'data': response.data['results'],
+            'count': response.data['count'],
+            'next': response.data['next'],
+            'previous': response.data['previous'],
+        }, status=status.HTTP_200_OK)
+    
+class SearchProductView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+    pagination_class = Pagination
+
+    def get_queryset(self):
+        queryset = ProductModel.objects.filter(name__icontains=self.kwargs['name']).order_by('id')
+        return queryset
+    
+    @swagger_auto_schema(tags=[PRODUCT_TAG])
+    def get(self, request, *args, **kwargs):
+        """ Buscar productos por el nombre (método GET) """
         response = super().get(request, *args, **kwargs)
 
         return Response({
