@@ -11,6 +11,7 @@ pip install psycopg2-binary
 pip install djangorestframework-simplejwt
 pip install -U drf-yasg
 pip install cloudinary
+pip install requests
 ```
 
 Si aparece el siguiente error: No module named 'pkg_resources
