@@ -25,6 +25,10 @@ class CreateSaleView(generics.CreateAPIView):
         }, status=status.HTTP_201_CREATED)
     
 
+    def generate_invoice(self, sale):
+        pass
+    
+
 class InvoiceView(APIView):
 
     @swagger_auto_schema(tags=[SALE_TAG])

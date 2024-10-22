@@ -30,15 +30,38 @@ class SaleSerializer(serializers.ModelSerializer):
     class Meta:
         model = SaleModel
         fields = '__all__'
+    
+    def validate(self, attrs):
+        # Validar el stock de cada producto
+        details = attrs.get('details')
+
+        for detail in details:
+            product = detail.get('product')
+            if product.stock < detail.get('quantity'):
+                raise serializers.ValidationError(
+                    f'No hay suficiente stock de {product.name}'
+                )
+
+        return attrs
 
     def create(self, validated_data):
-        customer = validated_data.pop('customer')
-        details = validated_data.pop('details')
+        customer = validated_data.get('customer')
+        details = validated_data.get('details')
 
         customer, _ = CustomerModel.objects.get_or_create(**customer)
         sale = SaleModel.objects.create(customer=customer, **validated_data)
 
         for detail in details:
+            # Restar el stock de cada producto
+            product = detail.get('product')
+            quantity = detail.get('quantity')
+            if product.stock < quantity:
+                raise serializers.ValidationError(
+                    f'No hay suficiente stock de {product.name}'
+                )
+            product.stock -= quantity
+            product.save()
+
             SaleDetailModel.objects.create(sale=sale, **detail)
         
         return sale
