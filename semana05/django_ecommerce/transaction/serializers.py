@@ -45,10 +45,18 @@ class SaleSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
-        customer = validated_data.get('customer')
-        details = validated_data.get('details')
-
-        customer, _ = CustomerModel.objects.get_or_create(**customer)
+        customer = validated_data.pop('customer')
+        details = validated_data.pop('details')
+        customer, _ = CustomerModel.objects.get_or_create(
+            document_number=customer.get('document_number'),
+            defaults=customer
+        )
+        # try:
+        #     customer = CustomerModel.objects.get(
+        #         document_number=customer.get('document_number')
+        #     )
+        # except CustomerModel.DoesNotExist:
+        #     customer = CustomerModel.objects.create(**customer)
         sale = SaleModel.objects.create(customer=customer, **validated_data)
 
         for detail in details:
