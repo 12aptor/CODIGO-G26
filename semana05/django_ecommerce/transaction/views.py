@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from .serializers import (
     SaleSerializer,
 )
+from .models import (
+    SaleModel,
+)
 from warehouse.models import (
     ProductModel
 )
@@ -122,6 +125,19 @@ class CreateSaleView(generics.CreateAPIView):
         
         return nubefact_response_json
     
+class ListSaleView(generics.ListAPIView):
+    queryset = SaleModel.objects.all()
+    serializer_class = SaleSerializer
+
+    @swagger_auto_schema(tags=[SALE_TAG])
+    def get(self, request, *args, **kwargs):
+        """ Listar ventas (método GET) """
+        response = super().get(request, *args, **kwargs)
+
+        return Response({
+            'message': 'Ventas listadas exitosamente',
+            'data': response.data
+        }, status=status.HTTP_200_OK)
 
 class InvoiceView(APIView):
 

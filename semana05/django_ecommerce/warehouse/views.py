@@ -19,6 +19,7 @@ from drf_yasg import openapi
 from authentication.permissions import (
     IsAuthenticated,
     IsAdmin,
+    IsSellerOrAdmin,
 )
 
 CATEGORY_TAG = 'Categoria de productos'
@@ -107,13 +108,32 @@ class DeleteCategoryView(generics.DestroyAPIView):
             }, status=status.HTTP_404_NOT_FOUND)
 
 class ListProductView(generics.ListAPIView):
+    queryset = ProductModel.objects.all()
+    serializer_class = ProductSerializer
+    pagination_class = Pagination
+    permission_classes = [IsAuthenticated, IsSellerOrAdmin]
+
+    @swagger_auto_schema(tags=[PRODUCT_TAG])
+    def get(self, request, *args, **kwargs):
+        """ Listar productos (método GET) """
+        response = super().get(request, *args, **kwargs)
+
+        return Response({
+            'message': 'Productos listados exitosamente',
+            'data': response.data['results'],
+            'count': response.data['count'],
+            'next': response.data['next'],
+            'previous': response.data['previous'],
+        }, status=status.HTTP_200_OK)
+    
+class ListActiveProductView(generics.ListAPIView):
+    queryset = ProductModel.objects.all()
     serializer_class = ProductSerializer
     pagination_class = Pagination
 
     def get_queryset(self):
-        queryset = ProductModel.objects.filter(name='ACTIVE').order_by('-id')
-        return queryset
-
+        return super().get_queryset().filter(status='ACTIVE').order_by('id')
+    
     @swagger_auto_schema(tags=[PRODUCT_TAG])
     def get(self, request, *args, **kwargs):
         """ Listar productos (método GET) """

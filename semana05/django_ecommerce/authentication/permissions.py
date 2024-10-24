@@ -37,8 +37,8 @@ class IsSellerOrAdmin(BasePermission):
 
         role = request.user.role.name
         if role == 'ADMIN' or role == 'SELLER':
-            raise AuthenticationFailed(detail={
-                'message': 'No tiene permisos de usuario'
-            }, code=401)
+            return True
         
-        return True
+        raise AuthenticationFailed(detail={
+            'message': 'No tiene permisos de usuario'
+        }, code=401)
