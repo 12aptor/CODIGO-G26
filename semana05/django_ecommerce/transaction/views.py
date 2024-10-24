@@ -51,7 +51,7 @@ class CreateSaleView(generics.CreateAPIView):
         subtotal = total / 1.18
         igv = total - subtotal
 
-        client_name = f'{customer.get('name')} {customer.get('last_name')}'
+        client_name = f"{customer.get('name')} {customer.get('last_name')}"
 
         invoice_data = {
             'operacion': 'generar_comprobante',
