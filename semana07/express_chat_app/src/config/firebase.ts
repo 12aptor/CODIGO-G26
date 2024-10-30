@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
 import dotenv from "dotenv";
+import { getStorage, ref } from "firebase/storage";
 
 dotenv.config();
 
@@ -13,3 +14,7 @@ const firebaseConfig = {
 };
 
 export const firebaseApp = initializeApp(firebaseConfig);
+
+const storage = getStorage(firebaseApp);
+
+export const userRef = (key: string) => ref(storage, `users/avatars/${key}`);
