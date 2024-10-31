@@ -65,6 +65,92 @@ const swaggerDefinition = {
           },
         },
       },
+      ListChannelResponse: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            description: "Mensaje de respuesta",
+            example: "Canales obtenidos exitosamente",
+          },
+          data: {
+            type: "array",
+            items: {
+              $ref: "#/components/schemas/Channel",
+            },
+          },
+        },
+      },
+      Login: {
+        type: "object",
+        properties: {
+          email: {
+            type: "string",
+            description: "Correo electrónico del usuario",
+            example: "usuario@ejemplo.com",
+          },
+          password: {
+            type: "string",
+            description: "Contaseña del usuario",
+            example: "123456",
+          },
+        },
+      },
+      LoginResponse: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            description: "Mensaje de respuesta",
+            example: "Sesión iniciada exitosamente",
+          },
+          data: {
+            type: "object",
+            properties: {
+              access: {
+                type: "string",
+                description: "Token de acceso",
+                example:
+                  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+              },
+            },
+          },
+        },
+      },
+      Register: {
+        type: "object",
+        required: ["username", "email", "password", "avatar"],
+        properties: {
+          username: {
+            type: "string",
+            description: "Nombre de usuario",
+            example: "usuario",
+          },
+          email: {
+            type: "string",
+            description: "Correo electrónico del usuario",
+            example: "usuario@ejemplo.com",
+            format: "email",
+          },
+          password: {
+            type: "string",
+            description: "Contraseña del usuario",
+            example: "123456",
+          },
+          avatar: {
+            type: "string",
+            description: "Imagen del usuario",
+            format: "binary",
+          },
+          status: {
+            type: "string",
+            description: "Estado del usuario",
+            example: "ONLINE",
+            enum: ["ONLINE", "OFFLINE", "IDLE"],
+            readOnly: true,
+          },
+        },
+      },
     },
   },
 };
