@@ -9,13 +9,13 @@ export const createChannel = async (req: Request, res: Response) => {
     const validatedBody = ChannelSchema.parse(req.body);
 
     const channel = await prisma.channels.create({
-        data: validatedBody,
-    })
+      data: validatedBody,
+    });
 
     res.status(201).json({
-        message: "Canal creado exitosamente",
-        data: channel,
-    })
+      message: "Canal creado exitosamente",
+      data: channel,
+    });
     return;
   } catch (error) {
     if (error instanceof ZodError) {
@@ -27,11 +27,34 @@ export const createChannel = async (req: Request, res: Response) => {
     }
 
     if (error instanceof Error) {
-        res.status(500).json({
-            message: message.HTTP_500,
-            errors: error.message,
-        })
-        return;
+      res.status(500).json({
+        message: message.HTTP_500,
+        errors: error.message,
+      });
+      return;
+    }
+  }
+};
+
+export const getChannels = async (_req: Request, res: Response) => {
+  try {
+    const channels = await prisma.channels.findMany({
+      orderBy: {
+        id: "asc",
+      },
+    });
+
+    res.status(200).json({
+      message: "Canales obtenidos exitosamente",
+      data: channels,
+    });
+    return;
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({
+        message: message.HTTP_500,
+      });
+      return;
     }
   }
 };
