@@ -42,3 +42,24 @@ router.post("/create", channelController.createChannel);
  *               $ref: '#/components/schemas/ListChannelResponse'
  */
 router.get("/list", channelController.getChannels);
+
+/**
+ * @swagger
+ * /api/channel/messages/{channelId}:
+ *   get:
+ *     summary: Ruta para obtener los mensajes de un canal
+ *     description: Obtener los mensajes de un canal
+ *     tags: [Canal]
+ *     parameters:
+ *       - in: path
+ *         name: channelId
+ *         required: true
+ *     responses:
+ *       200:
+ *         description: Mensajes obtenidos exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/ListChannelMessagesResponse'
+ */
+router.get("/messages/:channelId", channelController.getChannelMessages);

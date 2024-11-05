@@ -151,6 +151,60 @@ const swaggerDefinition = {
           },
         },
       },
+      ListChannelMessagesResponse: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            description: "Mensaje de respuesta",
+            example: "Mensajes obtenidos exitosamente",
+          },
+          data: {
+            type: "array",
+            items: {
+              type: "object",
+              properties: {
+                id: {
+                  type: "number",
+                  description: "ID del mensaje",
+                  example: 1,
+                },
+                content: {
+                  type: "string",
+                  description: "Contenido del mensaje",
+                  example: "Hola, ¿Cómo estás?",
+                },
+                created_at: {
+                  type: "string",
+                  format: "date-time",
+                  description: "Fecha de creación del mensaje",
+                  example: "2023-05-01T00:00:00.000Z",
+                },
+                author: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "number",
+                      description: "ID del autor del mensaje",
+                      example: 1,
+                    },
+                    username: {
+                      type: "string",
+                      description: "Nombre del autor del mensaje",
+                      example: "usuario",
+                    },
+                    avatar: {
+                      type: "string",
+                      description: "URL de la imagen del autor del mensaje",
+                      example: "https://example.com/avatar.png",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
 };
