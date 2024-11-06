@@ -6,12 +6,40 @@
     <title>Sockets</title>
   </head>
   <body>
+    <h1>Chat</h1>
+
+    <ul id="messagesList"></ul>
+    <input type="text" placeholder="Escribir..." id="messageInput" />
+    <button type="button" id="sendMessageBtn">Enviar mensaje</button>
+
     <script type="module">
       import { io } from "https://cdn.socket.io/4.8.0/socket.io.esm.min.js";
 
       const socket = io("http://localhost:8080");
 
-      socket.emit("message", "Hello World!");
+      const messagesList = document.getElementById("messagesList");
+      const messageInput = document.getElementById("messageInput");
+      const sendMessageBtn = document.getElementById("sendMessageBtn");
+
+      const channelId = "8b21c03b-dbb3-493f-8778-8934ba6b1b22";
+
+      socket.emit("join", channelId)
+
+      socket.on("message", (message) => {
+        const li = document.createElement("li");
+        li.textContent = `${message.author.username}: ${message.content}`;
+        messagesList.appendChild(li);
+      });
+
+      sendMessageBtn.addEventListener("click", () => {
+        const message = {
+            content: messageInput.value,
+            channel_id: channelId,
+            author_id: 1,
+        }
+        socket.emit("message", message);
+        messageInput.value = "";
+      });
     </script>
   </body>
 </html>

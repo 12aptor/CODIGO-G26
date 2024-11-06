@@ -6,6 +6,8 @@ import swaggerUi from "swagger-ui-express";
 import { swaggerSpec } from "./config/swagger";
 import http from "http";
 import { Server } from "socket.io";
+import { chatSocket } from "./sockets/chat.socket";
+import cors from "cors";
 
 dotenv.config();
 
@@ -19,22 +21,18 @@ const io = new Server(server, {
   },
 });
 
+app.use(
+  cors({
+    origin: "*",
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  })
+);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("/swagger", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 registerRoutes(app);
-
-io.on("connection", (socket) => {
-  socket.on("message", (message) => {
-    console.log("Mensaje recibido: ", message);
-    io.emit("message", message);
-  });
-
-  socket.on("disconnect", () => {
-    console.log("Cliente desconectado");
-  });
-});
+chatSocket(io);
 
 server.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
