@@ -8,6 +8,8 @@ export const router = Router();
  * /api/channel/create:
  *   post:
  *     summary: Ruta para crear un canal
+ *     security:
+ *       - BearerAuth: []
  *     description: Crear un canal
  *     tags: [Canal]
  *     requestBody:
@@ -31,6 +33,8 @@ router.post("/create", channelController.createChannel);
  * /api/channel/list:
  *   get:
  *     summary: Ruta para obtener los canales
+ *     security:
+ *       - BearerAuth: []
  *     description: Obtener los canales
  *     tags: [Canal]
  *     responses:
@@ -48,6 +52,8 @@ router.get("/list", channelController.getChannels);
  * /api/channel/messages/{channelId}:
  *   get:
  *     summary: Ruta para obtener los mensajes de un canal
+ *     security:
+ *       - BearerAuth: []
  *     description: Obtener los mensajes de un canal
  *     tags: [Canal]
  *     parameters:
