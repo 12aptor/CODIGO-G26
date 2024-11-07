@@ -12,6 +12,10 @@ const swaggerDefinition = {
       url: "http://localhost:8080",
       description: "Localhost",
     },
+    {
+      url: "https://express-chat-api-a1zz.onrender.com",
+      description: "Render",
+    },
   ],
   components: {
     schemas: {
@@ -148,6 +152,47 @@ const swaggerDefinition = {
             example: "ONLINE",
             enum: ["ONLINE", "OFFLINE", "IDLE"],
             readOnly: true,
+          },
+        },
+      },
+      RegisterResponse: {
+        type: "object",
+        properties: {
+          message: {
+            type: "string",
+            description: "Mensaje de respuesta",
+            example: "Usuario creado exitosamente",
+          },
+          data: {
+            type: "object",
+            properties: {
+              id: {
+                type: "number",
+                description: "ID del usuario",
+                example: 1,
+              },
+              username: {
+                type: "string",
+                description: "Nombre del usuario",
+                example: "usuario",
+              },
+              email: {
+                type: "string",
+                description: "Correo electrónico del usuario",
+                example: "usuario@ejemplo.com",
+              },
+              avatar: {
+                type: "string",
+                description: "URL de la imagen del usuario",
+                example: "https://example.com/avatar.png",
+              },
+              status: {
+                type: "string",
+                description: "Estado del usuario",
+                enum: ["ONLINE", "OFFLINE", "IDLE"],
+                example: "ONLINE",
+              },
+            },
           },
         },
       },

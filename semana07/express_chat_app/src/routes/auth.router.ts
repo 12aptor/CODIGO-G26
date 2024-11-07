@@ -17,6 +17,13 @@ export const router = Router();
  *         multipart/form-data:
  *           schema:
  *             $ref: '#/components/schemas/Register'
+ *     responses:
+ *       201:
+ *         description: Usuario creado exitosamente
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/RegisterResponse'
  */
 router.post("/register", upload.single("avatar"), authController.register);
 
