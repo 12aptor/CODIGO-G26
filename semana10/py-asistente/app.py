@@ -3,6 +3,7 @@ import pyttsx3
 from dotenv import load_dotenv
 import os
 import google.generativeai as genai
+import pywhatkit
 
 load_dotenv()
 
@@ -38,7 +39,7 @@ def ia_response(text: str) -> str:
     genai.configure(api_key=os.getenv('GEMINI_API_KEY'))
     model = genai.GenerativeModel('gemini-1.5-flash-latest')
     ai_response = model.generate_content(f"""
-    Clasifica el siguiente comando de voz como una de las siguientes opciones: "REPRODUCIR", "ABRIR_APLICACION", "DIGITAR_TEXTO", "SALIR", "CLICKAR". Basandote en el contexto del texto, devuelve unicamente una de las instrucciones.
+    Clasifica el siguiente comando de text como una de las siguientes opciones: "REPRODUCIR (Nombre_de_una_musica)", "REPRODUCIR (Nombre_del_tema_de_un_video)", "ABRIR_APLICACION (Nombre_de_una_aplicación)", "DIGITAR_TEXTO (Texto_a_digitar)", "SALIR", "OTROS". Basado en el texto recibido, response con la respuesta más probable.
                                         
     Ejemplo de comandos:
     - "Reproduce la música de Queen" -> "REPRODUCIR (Queen)"
@@ -49,9 +50,22 @@ def ia_response(text: str) -> str:
     Comando de texto recibido: {text}
     """)
 
-    print(ai_response)
-    print('-' * 50)
-    print(ai_response.text)
+    return ai_response.text
+
+def open_youtube(content_name: str) -> None:
+    """Abre el navegador de YouTube y reproduce el contenido"""
+    pywhatkit.playonyt(content_name)
+
+def execute_instruction(instruction: str) -> None:
+    """Ejecuta la instrucción recibida"""
+    if instruction == "SALIR":
+        speak("Adiós, ¡Hasta pronto!")
+    elif instruction == "OTROS":
+        speak("Lo siento, por el momento no puedo realizar eso.")
+    elif "REPRODUCIR" in instruction:
+        content_name = instruction.split(" ")[1].replace("(", "").replace(")", "")
+        speak(f"Reproduciendo {content_name} en YouTube")
+        open_youtube(content_name)
 
 def main():
     """Inicia el programa"""
@@ -60,6 +74,7 @@ def main():
 
         if text is not None:
             instruction = ia_response(text)
+            execute_instruction(instruction)
 
 
 if __name__ == '__main__':
