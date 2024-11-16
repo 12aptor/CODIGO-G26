@@ -4,6 +4,8 @@ from dotenv import load_dotenv
 import os
 import google.generativeai as genai
 import pywhatkit
+import subprocess
+import pyautogui
 
 load_dotenv()
 
@@ -45,7 +47,7 @@ def ia_response(text: str) -> str:
     - "Reproduce la música de Queen" -> "REPRODUCIR (Queen)"
     - "Me gusta los tutoriales de ciencias y experimentar con la física podrias mostrarme algunos videos" -> "REPRODUCIR (videos de ciencias y física)"
     - "Abre el editor de vs code" -> "ABRIR_APLICACION (code)"
-    - "Escribe el texto 'Reunión a las 10:00 am'" -> "DIGITAR_TEXTO ('Reunión a las 10:00 am')"
+    - "Escribe el texto Reunión a las 10:00 am" -> "DIGITAR_TEXTO (Reunión a las 10:00 am)"
                                          
     Comando de texto recibido: {text}
     """)
@@ -56,16 +58,35 @@ def open_youtube(content_name: str) -> None:
     """Abre el navegador de YouTube y reproduce el contenido"""
     pywhatkit.playonyt(content_name)
 
+def get_content_from_instruction(instruction: str) -> str:
+    """Extrae el nombre del contenido del comando recibido"""
+    return instruction.split(" ")[1].replace("(", "").replace(")", "")
+
+def write_text(content: str) -> None:
+    """Tipea el contenido en cualquier aplicación"""
+    pyautogui.write(content)
+
 def execute_instruction(instruction: str) -> None:
     """Ejecuta la instrucción recibida"""
+    print(instruction)
+
     if instruction == "SALIR":
         speak("Adiós, ¡Hasta pronto!")
     elif instruction == "OTROS":
         speak("Lo siento, por el momento no puedo realizar eso.")
     elif "REPRODUCIR" in instruction:
-        content_name = instruction.split(" ")[1].replace("(", "").replace(")", "")
-        speak(f"Reproduciendo {content_name} en YouTube")
-        open_youtube(content_name)
+        content = get_content_from_instruction(instruction)
+        speak(f"Reproduciendo {content} en YouTube")
+        open_youtube(content)
+    elif "ABRIR_APLICACION" in instruction:
+        content = get_content_from_instruction(instruction)
+        vs_code_path = r"C:\Users\usuario\AppData\Local\Programs\Microsoft VS Code\Code.exe"
+        subprocess.Popen(vs_code_path)
+        speak(f"Abriendo {content}")
+    elif "DIGITAR_TEXTO" in instruction:
+        content = get_content_from_instruction(instruction)
+        write_text(content)
+        speak(f"Digitando {content}")
 
 def main():
     """Inicia el programa"""
