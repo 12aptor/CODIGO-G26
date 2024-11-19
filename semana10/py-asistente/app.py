@@ -6,6 +6,7 @@ import google.generativeai as genai
 import pywhatkit
 import subprocess
 import pyautogui
+import sys
 
 load_dotenv()
 
